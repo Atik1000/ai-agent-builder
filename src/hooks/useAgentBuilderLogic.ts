@@ -1,3 +1,4 @@
+import { arrayMove } from '@dnd-kit/sortable'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { useNotifications } from './useNotifications'
 import type { SavedAgent } from '../types'
@@ -55,6 +56,24 @@ export function useAgentBuilderLogic() {
 
   const removeLayer = useCallback((layerId: string) => {
     setSelectedLayers((prev) => prev.filter((id) => id !== layerId))
+  }, [])
+
+  const reorderSkills = useCallback((activeId: string, overId: string) => {
+    setSelectedSkills((items) => {
+      const oldIndex = items.indexOf(activeId)
+      const newIndex = items.indexOf(overId)
+      if (oldIndex < 0 || newIndex < 0 || oldIndex === newIndex) return items
+      return arrayMove(items, oldIndex, newIndex)
+    })
+  }, [])
+
+  const reorderLayers = useCallback((activeId: string, overId: string) => {
+    setSelectedLayers((items) => {
+      const oldIndex = items.indexOf(activeId)
+      const newIndex = items.indexOf(overId)
+      if (oldIndex < 0 || newIndex < 0 || oldIndex === newIndex) return items
+      return arrayMove(items, oldIndex, newIndex)
+    })
   }, [])
 
   const saveAgent = useCallback(() => {
@@ -148,6 +167,8 @@ export function useAgentBuilderLogic() {
     addLayer,
     removeSkill,
     removeLayer,
+    reorderSkills,
+    reorderLayers,
     agentName,
     setAgentName,
     selectedProvider,
