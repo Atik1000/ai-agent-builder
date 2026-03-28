@@ -1,17 +1,11 @@
-import { useEffect, useState } from 'react'
+import { useSessionSeconds } from '../hooks/useSessionSeconds'
 
-/** Isolated timer so the rest of the app does not re-render every second. */
+/** Uses isolated session clock hook so the rest of the builder is not affected each second. */
 export function SessionTimer() {
-  const [seconds, setSeconds] = useState(0)
-
-  useEffect(() => {
-    const id = window.setInterval(() => setSeconds((s) => s + 1), 1000)
-    return () => window.clearInterval(id)
-  }, [])
-
+  const seconds = useSessionSeconds()
   return (
-    <span className="text-slate-400 text-sm tabular-nums">
-      Session active: <span className="text-teal-300 font-medium">{seconds}s</span>
+    <span className="ab-session">
+      Session active: <span className="ab-session__value">{seconds}s</span>
     </span>
   )
 }
